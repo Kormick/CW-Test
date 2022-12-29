@@ -18,3 +18,12 @@ This solution creates a tokio task for each repository and provides it with `mps
 Then awaits on the channel receiver for the results. If result is successful, abort remaining tasks and return, otherwise create a new task.
 
 This implementation resolves both issues - we don't lock on one of the tasks, and we also yield current thread if none of the tasks are finished.
+
+4. `std_futures.rs`
+Implementation without additional crates.
+This solution implements custom `Future` that handles polling futures for `download` function.
+On each `poll` we iterate through each `download` future and poll it. 
+If one of them is ready with successful result, immediately return the result and finish execution of main future. 
+If one of them is ready with failed result, remove it from the polling list and add a new one, if retry count is not deleted.
+If there are no `download` futures left in polling list, finish execution of main future with unsuccessful result.
+Otherwise, return pending status from main future.

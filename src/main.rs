@@ -1,6 +1,6 @@
 use concurrency_exercise_01::{
     join_handle_iter::JoinHandleIter, join_handle_lock::JoinHandleLock, solution::Solution,
-    statement::ServerName, tokio_channels::TokioChannels,
+    statement::ServerName, std_futures::StdFutures, tokio_channels::TokioChannels,
 };
 
 #[tokio::main]
@@ -31,5 +31,10 @@ async fn main() {
     match TokioChannels::solve(repositories.clone()).await {
         None => println!("[TokioChannels] All downloads failed!"),
         Some(binary) => println!("[TokioChannels] {binary} downloaded"),
+    }
+
+    match StdFutures::solve(repositories.clone()).await {
+        None => println!("[StdFutures] All downloads failed!"),
+        Some(binary) => println!("[StdFutures] {binary} downloaded"),
     }
 }
